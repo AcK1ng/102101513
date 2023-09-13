@@ -17,7 +17,6 @@ os.environ['NO_PROXY'] = 'bilibili.com'
 # 忽略warning警告
 warnings.filterwarnings("ignore")
 
-
 def get_bvid(page, pos):
     # 通过搜索api“https://api.bilibili.com/x/web-interface/search/all/v2?page=1-15&keyword=”获取前300个视频的bvid
     _url = 'https://api.bilibili.com/x/web-interface/search/all/v2?page='+str(page+1)+'&keyword=日本核污染水排海'
@@ -66,7 +65,7 @@ def get_wordcloud():
     txt_list = jieba.lcut(txt)
     # print(string)
     string = ' '.join(txt_list)
-    mask_image = "china.png"
+    mask_image = "world.png"
     # 导入中国地图，使得词云生成的图片在轮廓中
     mask = np.array(image.open(mask_image))
     # 词云的参数设置
@@ -88,28 +87,25 @@ def get_wordcloud():
 
 
 def print_danmu():
-        plt.rc('font', family='SimHei', size=13)
-        # 读取 xlsx 文件，从第一行开始读取数据
-        all_danmu = pd.read_csv('b站弹幕.csv', header=None, encoding='utf-8')
-        # 统计每个弹幕出现的次数
-        counter = all_danmu.stack().value_counts()
-        # 转换为DataFrame并重置索引
-        top_20 = counter.head(20).reset_index()
-        top_20.columns = ['弹幕', '出现次数']
-        print(top_20)
-        # 按出现次数升序排序
-        top_20 = top_20.sort_values(by='出现次数', ascending=True)
-        # 设置图表样式和布局
-        plt.style.use('ggplot')
-        plt.figure(figsize=(15, 10))
-        # 绘制水平条形图，提供xy轴的坐标信息
-        plt.barh(top_20['弹幕'], top_20['出现次数'], color='red')
-        plt.xlabel('出现次数')
-        plt.ylabel('弹幕')
-        plt.title('Top 20 弹幕统计')
-        plt.show()
-        # 统计弹幕出现次数并存入danmu_arrangement.csv中
-        counter.to_csv('danmu_arrangement.csv')
+    plt.rc('font', family='SimHei', size=13)
+    # 读取 xlsx 文件，从第一行开始读取数据
+    all_danmu = pd.read_csv('b站弹幕.csv', header=None, encoding='utf-8')
+    # 统计每个弹幕出现的次数
+    counter = all_danmu.stack().value_counts()
+    # 转换为DataFrame并重置索引
+    top_20 = counter.head(20).reset_index()
+    top_20.columns = ['弹幕', '出现次数']
+    # 按出现次数升序排序
+    top_20 = top_20.sort_values(by='出现次数', ascending=True)
+    # 设置图表样式和布局
+    plt.style.use('ggplot')
+    plt.figure(figsize=(12, 12))  # 调整图表大小
+    # 生成圆盘图表
+    plt.pie(top_20['出现次数'], labels=top_20['弹幕'], autopct='%1.1f%%', startangle=140)
+    plt.title('Top 20 弹幕统计')
+    plt.show()
+    # 统计弹幕出现次数并存入danmu_arrangement.csv中
+    counter.to_csv('danmu_arrangement.csv')
 
 def main():
     for i in range(15):
@@ -118,4 +114,6 @@ def main():
         time.sleep(1)
     print_danmu()
     get_wordcloud()
+
+
 main()
