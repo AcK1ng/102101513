@@ -105,7 +105,7 @@ def print_danmu():
     plt.title('Top 20 弹幕统计')
     plt.show()
     # 统计弹幕出现次数并存入danmu_arrangement.csv中
-    counter.to_csv('danmu_arrangement.csv')
+    counter.to_csv('danmu_arrangement.csv', encoding='utf-8-sig')
 
 def main():
     for i in range(15):
