@@ -112,8 +112,8 @@ def print_danmu():
         counter.to_csv('danmu_arrangement.csv')
 
 def main():
-    for i in range(1):
-        for j in range(1):                 # 因为bilibili的api搜索页面一页有20个视频的信息，所以内循环设置为20，外循环设置为15
+    for i in range(15):
+        for j in range(20):                 # 因为bilibili的api搜索页面一页有20个视频的信息，所以内循环设置为20，外循环设置为15
             get_danmu(get_cid(get_bvid(i,j)))  # 获取搜索记录前300个视频的弹幕
         time.sleep(1)
     print_danmu()
