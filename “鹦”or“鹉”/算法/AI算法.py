@@ -5,6 +5,7 @@ import math
 initial_strategy = [0, 0, 0, 0, 0]  # 初始锁定策略
 initial_multiplier = 1  # 初始倍率
 dice_result = [random.randint(1, 6) for _ in range(5)]
+best_multiplier_strategy = 1  # 初始化最佳倍率策略为1
 def judge_shun(dice):
     # 判断是否为顺子
     dice.sort()
@@ -76,6 +77,7 @@ def calculate_score(strategy, multiplier, dice):
     # 根据策略、倍率和骰子计算分数
     total_score = calculate_score_dice(strategy, dice)
     return total_score * multiplier
+
 #模拟退火算法
 def simulated_annealing(initial_strategy, initial_multiplier, temperature, cooling_rate, num_iterations, dice):
     current_strategy = initial_strategy
@@ -87,6 +89,20 @@ def simulated_annealing(initial_strategy, initial_multiplier, temperature, cooli
     best_score = current_score
 
     for i in range(num_iterations):
+        #选择当前情况下最好的倍率
+        neighbor_multiplier = random.choice([1, 2, 3])
+
+        neighbor_score = calculate_score(choose_strategy, neighbor_multiplier, dice_result)
+
+        # 计算成本差异
+        score_difference = neighbor_score - best_score
+
+        # 如果邻近解更好或者按一定概率接受更差的解
+        if score_difference > 0 or random.random() < math.exp(score_difference / temperature):
+            best_multiplier_strategy = neighbor_multiplier
+            best_score = neighbor_score
+
+
         # 随机选择邻近的解
         neighbor_strategy = current_strategy[:]
         index_to_change = random.randint(0, len(neighbor_strategy) - 1)
@@ -176,6 +192,7 @@ for game_round in range(1, 4):  # 三轮游戏 # 运行模拟退火算法来选�
             choose_strategy[num] = 1
             has_locked[num] = 1
 
+    best_multiplier_strategy = random.randint(0,3)
     # 输出最佳策略和分数
 
     # 更新筹码数量和对手得分（模拟游戏进展）
@@ -183,3 +200,4 @@ for game_round in range(1, 4):  # 三轮游戏 # 运行模拟退火算法来选�
     opponent_score += 5  # 示例中简单地增加对手得分
     print(f"Round {game_round}:")
     print(f"Best Locking Strategy: {choose_strategy}")
+    print(f"Best multiplier_strategy: {best_multiplier_strategy}")
